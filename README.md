@@ -33,3 +33,36 @@ This repository contains a full-stack Retrieval-Augmented Generation (RAG) backe
    ```sh
    git clone <this-repo-url>
    cd rag
+   ```
+
+2. **Create environment variable files**
+
+   ```sh
+   cp .env.example .env
+   cp python_rag/.env.example python_rag/.env
+   cp document_crud/src/.env.example document_crud/src/.env
+   ```
+   - Edit the `.env` files as needed.
+   - For passwords, you can use a value like `12345` or set your own secure password.
+
+3. **Build and start all services**
+
+   ```sh
+   docker-compose up --build
+   ```
+
+   This will start:
+   - PostgreSQL (with pgvector extension)
+   - Redis
+   - Python FastAPI backend (on [http://localhost:8000](http://localhost:8000))
+   - NestJS CRUD API (on [http://localhost:3000](http://localhost:3000))
+
+4. **Stopping and resetting**
+
+   - To stop all services:
+     ```sh
+     docker-compose down
+     ```
+   - To remove all data (reset database/volumes):
+     ```sh
+     docker-compose down
