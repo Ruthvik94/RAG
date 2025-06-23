@@ -1,0 +1,59 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg15
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./python_rag/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
+
+  redis:
+    image: redis:7
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT}:6379"
+
+  document_crud:
+    build:
+      context: ./document_crud
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_NAME: ${DB_NAME}
+    ports:
+      - "${DOCUMENT_CRUD_PORT}:3000"
+    volumes:
+      - ./document_crud/uploads:/app/uploads
+    command: >
+      sh -c "npm run test && node dist/main.js"
+
+  python_rag:
+    build:
+      context: ./python_rag
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+    ports:
+      - "${PYTHON_RAG_PORT}:8000"
+    volumes:
+      - ./python_rag:/app
+volumes:
+  pgdata:
