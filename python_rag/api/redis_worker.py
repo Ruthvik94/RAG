@@ -3,14 +3,14 @@ import asyncio
 import redis.asyncio as redis
 import json
 import base64
-from services.file_utils import extract_text_from_file
+from services.file_utils import extract_text_from_file, chunk_text
 from services.embedding import generate_embedding
 from config import REDIS_HOST, REDIS_PORT, QA_MODEL
 
 REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}"
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
 
-qa_pipeline = pipeline("question-answering", model=f'{QA_MODEL}')
+qa_pipeline = pipeline("question-answering", model=QA_MODEL)
 
 async def handle_ingest(redis_conn, db_pool, model):
     pubsub = redis_conn.pubsub()
@@ -47,7 +47,18 @@ async def handle_ingest(redis_conn, db_pool, model):
             }))
             continue
 
-        embedding = await generate_embedding(text, model)
+        # Chunk text
+        chunks = chunk_text(text, max_chunk_size=500)
+
+        async with db_pool.acquire() as conn:
+            for chunk in chunks:
+                if chunk.strip():
+                    embedding = await generate_embedding(chunk, model)
+                    await conn.execute(
+                        "INSERT INTO documents (content, embedding) VALUES ($1, $2)",
+                        chunk, embedding.tolist()
+                    )
+
         # Convert embedding to pgvector string format
         embedding_str = "[" + ",".join(str(x) for x in embedding) + "]"
         async with db_pool.acquire() as conn:

@@ -1,5 +1,9 @@
 from fastapi import UploadFile, HTTPException
 
+import nltk
+nltk.download('punkt_tab')
+from nltk.tokenize import sent_tokenize
+
 async def extract_text_from_file(file: UploadFile, content: bytes) -> str:
     filename = file.filename.lower()
     print("DEBUG: filename =", filename)
@@ -22,3 +26,18 @@ async def extract_text_from_file(file: UploadFile, content: bytes) -> str:
             raise HTTPException(status_code=400, detail="Unsupported file type.")
     except Exception:
         raise HTTPException(status_code=400, detail="Failed to extract text from file.")
+    
+def chunk_text(text, max_chunk_size=500) -> list[str]:
+    sentences = sent_tokenize(text)
+    chunks = []
+    current_chunk = ""
+    for sentence in sentences:
+        if len(current_chunk) + len(sentence) <= max_chunk_size:
+            current_chunk += " " + sentence
+        else:
+            if current_chunk.strip():
+                chunks.append(current_chunk.strip())
+            current_chunk = sentence
+    if current_chunk.strip():
+        chunks.append(current_chunk.strip())
+    return chunks

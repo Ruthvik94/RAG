@@ -3,12 +3,12 @@ from fastapi import APIRouter, UploadFile, File, HTTPException, Request
 from fastapi.responses import JSONResponse
 from models.schemas import QueryRequest, QueryResponse
 from services.embedding import generate_embedding
-from services.file_utils import extract_text_from_file
+from services.file_utils import extract_text_from_file, chunk_text
 from config import QA_MODEL
 
 router = APIRouter()
 
-qa_pipeline = pipeline("question-answering", model=f'{QA_MODEL}')
+qa_pipeline = pipeline("question-answering", model=QA_MODEL)
 
 @router.post("/ingest/", response_class=JSONResponse)
 async def ingest(request: Request, file: UploadFile = File(...)):
@@ -25,12 +25,19 @@ async def ingest(request: Request, file: UploadFile = File(...)):
     text = await extract_text_from_file(file, content)
     if not text or not text.strip():
         raise HTTPException(status_code=400, detail="No text extracted from file.")
-    embedding = await generate_embedding(text, model)
+    
+    # Chunk text
+    chunks = chunk_text(text, max_chunk_size=500)
+
     async with db_pool.acquire() as conn:
-        await conn.execute(
-            "INSERT INTO documents (content, embedding) VALUES ($1, $2)",
-            text, embedding.tolist()
-        )
+        for chunk in chunks:
+            if chunk.strip():
+                embedding = await generate_embedding(chunk, model)
+                embedding_str = "[" + ",".join([str(x) for x in embedding.tolist()]) + "]"
+                await conn.execute(
+                    "INSERT INTO documents (content, embedding) VALUES ($1, $2)",
+                    chunk, embedding_str
+                )
     return {"status": "success"}
 
 @router.post("/query/", response_model=QueryResponse)
