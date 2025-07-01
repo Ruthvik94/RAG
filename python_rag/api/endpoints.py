@@ -1,10 +1,14 @@
+from transformers import pipeline
 from fastapi import APIRouter, UploadFile, File, HTTPException, Request
 from fastapi.responses import JSONResponse
 from models.schemas import QueryRequest, QueryResponse
 from services.embedding import generate_embedding
 from services.file_utils import extract_text_from_file
+from config import QA_MODEL
 
 router = APIRouter()
+
+qa_pipeline = pipeline("question-answering", model=f'{QA_MODEL}')
 
 @router.post("/ingest/", response_class=JSONResponse)
 async def ingest(request: Request, file: UploadFile = File(...)):
@@ -49,5 +53,9 @@ async def query(request: Request, query_request: QueryRequest):
             LIMIT 5
         """, embedding_str)
     context = " ".join([r["content"] for r in rows]) if rows else ""
-    answer = f"Generated answer based on {context}" if context else "No relevant documents found."
+    if context:
+        result = qa_pipeline(question=question, context=context)
+        answer = result.get("answer", "No answer found.")
+    else:
+        answer = "No relevant documents found."
     return QueryResponse(answer=answer)

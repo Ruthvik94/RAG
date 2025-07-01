@@ -1,13 +1,16 @@
+from transformers import pipeline
 import asyncio
 import redis.asyncio as redis
 import json
 import base64
 from services.file_utils import extract_text_from_file
 from services.embedding import generate_embedding
-from config import REDIS_HOST, REDIS_PORT
+from config import REDIS_HOST, REDIS_PORT, QA_MODEL
 
 REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}"
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
+
+qa_pipeline = pipeline("question-answering", model=f'{QA_MODEL}')
 
 async def handle_ingest(redis_conn, db_pool, model):
     pubsub = redis_conn.pubsub()
@@ -82,18 +85,13 @@ async def handle_query(redis_conn, db_pool, model):
                 ORDER BY embedding <-> $1::vector
                 LIMIT 5
             """, embedding_str)
-        # Filter for exact or substring match in Python
-        # answer = None
-        # for row in rows:
-        #     content = row["content"]
-        #     if question.lower() in content.lower():  # substring match
-        #         answer = content
-        #         break
-        # if not answer:
-        #     answer = "No relevant documents found."
 
         context = " ".join([r["content"] for r in rows]) if rows else ""
-        answer = f"Generated answer based on {context}" if context else "No relevant documents found."
+        if context:
+            result = qa_pipeline(question=question, context=context)
+            answer = result.get("answer", "No answer found.")
+        else:
+            answer = "No relevant documents found."
         print("Publishing query success response")
         await redis_conn.publish("query_responses", json.dumps({
             "status": "success", "answer": answer, "request_id": request_id
