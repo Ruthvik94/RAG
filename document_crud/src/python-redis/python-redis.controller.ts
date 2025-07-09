@@ -11,7 +11,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes, ApiBody } from '@nestjs/swagger';
 import { PythonRedisService } from './python-redis.service';
 
-@Controller('python')
+@Controller('api')
 export class PythonController {
   constructor(private readonly pythonRedisService: PythonRedisService) {}
 
