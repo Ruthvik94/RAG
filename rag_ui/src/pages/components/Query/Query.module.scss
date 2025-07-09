@@ -1,0 +1,107 @@
+.spinnerBox {
+  background: transparent;
+  border-radius: $response-radius;
+  min-height: $response-min-height;
+  max-height: $response-max-height;
+  max-width: $response-max-width;
+  min-width: $response-min-width;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $input-padding;
+}
+
+.query {
+  text-align: center;
+
+  &-gradient-bg {
+    position: relative;
+    z-index: 0;
+    &::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background: linear-gradient(
+        135deg,
+        $chakra-gray-800 60%,
+        $chakra-blue-900 100%
+      );
+      background-attachment: fixed;
+      background-size: cover;
+    }
+  }
+}
+
+.container {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.bigSearch {
+  width: 70vw;
+  max-width: $response-max-width;
+  min-width: $response-min-width;
+  margin: 0 auto;
+  position: relative;
+}
+
+.glowInput {
+  width: 100%;
+  font-size: $input-font-size;
+  padding: $input-padding;
+  border-radius: $input-radius;
+  border: none;
+  outline: none;
+  background: $chakra-white;
+  box-shadow: $input-box-shadow;
+  transition: box-shadow 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: glow-fade 2.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes glow-fade {
+  0% {
+    box-shadow: $input-box-shadow-0;
+  }
+  60% {
+    box-shadow: $input-box-shadow-60;
+  }
+  100% {
+    box-shadow: $input-box-shadow-100;
+  }
+}
+
+.responseBox {
+  padding: $input-padding;
+  font-size: $font-size-lg;
+  margin-top: 1.5rem;
+  width: 100%;
+  min-height: $response-min-height;
+  max-height: $response-max-height;
+  max-width: $response-max-width;
+  min-width: $response-min-width;
+  overflow-y: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+  background: $response-bg;
+  border-radius: $response-radius;
+  box-shadow: $response-box-shadow;
+}
+.responseText {
+  width: 100%;
+  white-space: pre-line;
+  text-align: left;
+}
+.responseError {
+  color: $response-error;
+  width: 100%;
+  text-align: center;
+}

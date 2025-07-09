@@ -1,0 +1,77 @@
+$chakra-green-500: #38a169;
+$chakra-yellow-400: #ecc94b;
+$chakra-black: #000000;
+$chakra-blue-50: #e6f6ff;
+$chakra-blue-100: #bee3f8;
+$chakra-blue-200: #90cdf4;
+$chakra-blue-300: #63b3ed;
+$chakra-blue-400: #4299e1;
+$chakra-blue-600: #3182ce;
+$chakra-blue-800: #2a4365;
+$chakra-blue-900: #1a365d;
+$chakra-gray-200: #edf2f7;
+$chakra-gray-400: #b5b5b5;
+$chakra-gray-700: #232323;
+$chakra-gray-800: #111111;
+$chakra-gray-900: #171923;
+$chakra-red-500: #e53e3e;
+$chakra-teal-400: #38b2ac;
+$chakra-purple-500: #805ad5;
+$chakra-white: #ffffff;
+
+$primary: $chakra-teal-400;
+$primary-dark: $chakra-blue-600;
+$primary-color: $chakra-blue-600;
+$accent: $chakra-purple-500;
+
+$input-radius: 2.5rem;
+$input-font-size: 2rem;
+$input-padding: 1.2rem 2rem;
+
+$input-box-shadow: 0 0 10px 8px $chakra-blue-400;
+$input-box-shadow-0: 0 0 16px 20px $chakra-blue-300;
+$input-box-shadow-60: 0 0 32px 16px $chakra-blue-200;
+$input-box-shadow-100: 0 0 10px 8px $chakra-blue-100;
+
+$box-shadow-bottom: 0 4px 16px -2px rgba($chakra-black, 0.18);
+$tab-hover-shadow: 0 4px 12px -2px $primary-dark;
+$box-shadow-gray: rgba(180, 190, 210, 0.18);
+$box-shadow-gray-hover: rgba(180, 190, 210, 0.28);
+$box-shadow-blue: rgba(49, 130, 206, 0.18);
+$box-shadow-blue-hover: rgba(49, 130, 206, 0.38);
+
+$navbar-bg: $chakra-gray-800;
+$navbar-border: $chakra-gray-700;
+$navbar-padding: 16px 20px 0 20px;
+
+$text-default: $chakra-gray-400;
+$text-active: $chakra-white;
+$text-hover: $chakra-blue-50;
+
+$response-bg: $chakra-white;
+$response-radius: 1.5rem;
+$response-box-shadow: $box-shadow-bottom;
+$response-min-height: 220px;
+$response-max-height: 40vh;
+$response-max-width: 900px;
+$response-min-width: 320px;
+$response-error: $chakra-red-500;
+
+$logo-gradient: linear-gradient(
+  90deg,
+  $primary,
+  $primary-dark,
+  $accent,
+  $primary
+);
+$indicator-bg: $primary;
+$indicator-radius: 2px;
+
+$radius: 6px;
+$font-size-lg: 20px;
+$tab-padding: 8px 40px 0 40px;
+
+$indicator-transition: border-bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+$background: $chakra-black;
+
+$spinner-thickness: 4px;

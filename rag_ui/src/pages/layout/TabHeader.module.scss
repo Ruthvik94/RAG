@@ -1,0 +1,92 @@
+.header {
+  width: 100%;
+  background: $navbar-bg;
+  box-shadow: $box-shadow-bottom;
+  padding: $navbar-padding;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid $navbar-border;
+}
+
+.nav {
+  display: flex;
+  align-items: baseline;
+  max-width: 96vw;
+  margin: 0 auto;
+  min-height: 44px;
+}
+
+.logo {
+  font-weight: bold;
+  font-size: $font-size-lg;
+  letter-spacing: 0.01em;
+  margin-right: 32px;
+  background: $logo-gradient;
+  background-size: 200% 200%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: gradient-move 1s linear infinite alternate;
+  display: flex;
+  align-items: baseline;
+}
+
+@keyframes gradient-move {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  position: relative;
+}
+
+.tabLink {
+  font-size: $font-size-lg;
+  padding: $tab-padding;
+  color: $text-default;
+  font-weight: 500;
+  background: none;
+  border: none;
+  border-radius: $radius;
+  outline: none;
+  cursor: pointer;
+  transition: color 0.2s;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  min-height: 44px;
+}
+.tabLink[aria-current="page"] {
+  color: $text-active;
+  font-weight: 700;
+}
+
+.tabIndicator {
+  position: absolute;
+  bottom: 0;
+  height: 2.5px;
+  background: $indicator-bg;
+  border-radius: $indicator-radius;
+  z-index: 1;
+  left: 0;
+  width: 0;
+  pointer-events: none;
+  transition: $indicator-transition;
+}
+.tabLink:focus {
+  box-shadow: 0 0 0 2px $primary;
+}
+.tabLink:hover {
+  color: $text-hover;
+}

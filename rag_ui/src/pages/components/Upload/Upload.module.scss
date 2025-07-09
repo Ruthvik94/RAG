@@ -1,0 +1,64 @@
+.upload {
+  text-align: center;
+  min-height: 70vh;
+
+  &-gradient-bg {
+    position: relative;
+    z-index: 0;
+    &::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background: linear-gradient(
+        135deg,
+        $chakra-gray-800 60%,
+        $chakra-blue-900 100%
+      );
+      background-attachment: fixed;
+      background-size: cover;
+    }
+  }
+
+  &-card {
+    &-box-shadow {
+      box-shadow: 12px 0 15px -4px rgba(191, 194, 197, 0.8),
+        -12px 0 8px -4px rgba(191, 194, 197, 0.8);
+    }
+  }
+}
+
+.uploadBtn {
+  color: $chakra-white !important;
+  background: $chakra-green-500 !important;
+  &:hover {
+    background: color-mix(in srgb, $chakra-green-500 80%, black 20%) !important;
+  }
+}
+.deleteBtn {
+  color: $chakra-white !important;
+  background: $chakra-red-500 !important;
+  &:hover {
+    background: color-mix(in srgb, $chakra-red-500 80%, black 20%) !important;
+  }
+}
+.ingestBtn {
+  color: $chakra-black !important;
+  background: $chakra-yellow-400 !important;
+  &:hover {
+    background: color-mix(
+      in srgb,
+      $chakra-yellow-400 80%,
+      black 20%
+    ) !important;
+  }
+}
+
+.container {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
