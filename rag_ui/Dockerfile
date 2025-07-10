@@ -1,5 +1,5 @@
 # Use Node.js as the base image for building
-FROM node:20-alpine as build
+FROM node:20-alpine AS build
 
 # Set working directory
 WORKDIR /app
@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci --only=production
+RUN npm i
 
 # Copy source code
 COPY . .

@@ -30,6 +30,9 @@ services:
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASS}
       DB_NAME: ${DB_NAME}
+      DOCUMENT_CRUD_PORT: ${DOCUMENT_CRUD_PORT}
+      RAG_UI_HOST: ${RAG_UI_HOST}
+      RAG_UI_PORT: ${RAG_UI_PORT}
     ports:
       - "${DOCUMENT_CRUD_PORT}:3000"
     volumes:
@@ -51,6 +54,9 @@ services:
       DB_PASS: ${DB_PASS}
       REDIS_HOST: ${REDIS_HOST}
       REDIS_PORT: ${REDIS_PORT}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL}
+      QA_MODEL: ${QA_MODEL}
+      DATASET: ${DATASET}
     ports:
       - "${PYTHON_RAG_PORT}:8000"
     volumes:
