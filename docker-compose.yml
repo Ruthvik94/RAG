@@ -55,5 +55,15 @@ services:
       - "${PYTHON_RAG_PORT}:8000"
     volumes:
       - ./python_rag:/app
+  rag_ui:
+    build:
+      context: ./rag_ui
+    ports:
+      - "${RAG_UI_PORT}:8080"
+    environment:
+      - API_URL=http://localhost:${PYTHON_RAG_PORT}
+    depends_on:
+      - python_rag
+      - document_crud
 volumes:
   pgdata:
