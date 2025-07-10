@@ -18,6 +18,8 @@ import {
   SPINNER_THICKNESS,
 } from "@config";
 
+import { API_ENDPOINTS } from "@apiConfig";
+
 import styles from "./Upload.module.scss";
 
 const FileUploadCard = () => {
@@ -29,10 +31,7 @@ const FileUploadCard = () => {
     if (!fileObj || fileObj?.files.length === 0) return;
     const uploadedFile = fileObj?.files?.[0];
     if (uploadedFile) {
-      // Capture the blob of the file
-      const fileBlob =
-        uploadedFile instanceof Blob ? uploadedFile : new Blob([uploadedFile]);
-      setFile(fileBlob);
+      setFile(uploadedFile); // Store the File object directly
       setError("");
     }
   };
@@ -48,6 +47,31 @@ const FileUploadCard = () => {
       } else {
         setError("File size exceeds 5 MB");
       }
+    }
+  };
+
+  const handleFileIngest = async () => {
+    setShowSpinner(true);
+    setError("");
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch(API_ENDPOINTS.INGEST, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorMsg = await response.json();
+        setError(errorMsg || "Failed to upload file.");
+      } else {
+        setFile(null);
+      }
+    } catch (err) {
+      setError("An error occurred while uploading the file.", err);
+    } finally {
+      setShowSpinner(false);
     }
   };
 
@@ -141,7 +165,7 @@ const FileUploadCard = () => {
                 className={styles.uploadBtn}
                 textStyle="sm"
                 fontWeight="bold"
-                onClick={() => setShowSpinner(true)}
+                onClick={handleFileIngest}
               >
                 Upload
               </Button>

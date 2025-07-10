@@ -9,6 +9,7 @@ import {
   Center,
 } from "@chakra-ui/react";
 import { SPINNER_THICKNESS } from "@config";
+// import { INGEST } from '@apiConfig'
 
 import styles from "./Upload.module.scss";
 

@@ -54,9 +54,10 @@ async def handle_ingest(redis_conn, db_pool, model):
             for chunk in chunks:
                 if chunk.strip():
                     embedding = await generate_embedding(chunk, model)
+                    embedding_str = "[" + ",".join([str(x) for x in embedding.tolist()]) + "]"
                     await conn.execute(
                         "INSERT INTO documents (content, embedding) VALUES ($1, $2)",
-                        chunk, embedding.tolist()
+                        chunk, embedding_str
                     )
 
         # Convert embedding to pgvector string format

@@ -46,21 +46,19 @@ const Query = () => {
       setLoading(true);
       (async () => {
         try {
-          // MOCK: Simulate API delay and response
-          await new Promise((res) => setTimeout(res, 1000));
           if (!cancelRef.current) {
             setLoading(false);
-            setResponse("This is a sample response from RAG");
           }
-          // --- Uncomment below for real API ---
-          // const res = await fetch(API_ENDPOINTS.QUERY, {
-          //   method: "POST",
-          //   headers: { "Content-Type": "application/json" },
-          //   body: JSON.stringify({ query: value }),
-          // });
-          // if (!res.ok) throw new Error("API error");
-          // const data = await res.json();
-          // if (!cancelRef.current) setResponse(data.response || JSON.stringify(data));
+          const res = await fetch(API_ENDPOINTS.QUERY, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ question: value }),
+          });
+          if (!res.ok) throw new Error("API error");
+          const { answer = "" } = (await res.json()) || { answer: "" };
+          if (!cancelRef.current) {
+            setResponse(answer);
+          }
         } catch (err) {
           if (!cancelRef.current) {
             console.log("Error fetching response:", err);
