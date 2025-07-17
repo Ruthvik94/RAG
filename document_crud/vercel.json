@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "buildCommand": "",
+  "functions": {
+    "api/index.ts": {
+      "runtime": "@vercel/node@3.2.29"
+    }
+  },
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/api"
+    }
+  ]
+}
