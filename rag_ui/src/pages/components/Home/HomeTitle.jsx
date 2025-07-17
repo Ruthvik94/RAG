@@ -101,6 +101,7 @@ const HomeTitle = ({ onDone }) => {
             textAlign: "center",
             position: "relative",
             verticalAlign: "baseline",
+            whiteSpace: "nowrap",
           }}
         >
           <Bracket type="open" visible={showAcronym} />
