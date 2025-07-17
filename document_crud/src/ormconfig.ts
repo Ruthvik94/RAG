@@ -1,5 +1,6 @@
 import { DataSource } from 'typeorm';
 import * as dotenv from 'dotenv';
+import { Document } from './documents/documents.entity';
 
 dotenv.config();
 
@@ -10,6 +11,10 @@ export default new DataSource({
   username: process.env.DB_USER || 'rag_user',
   password: process.env.DB_PASS || '12345',
   database: process.env.DB_NAME || 'documents_db',
-  entities: [__dirname + '/documents/**/*.entity{.ts,.js}'],
-  synchronize: true, // Disable in production!
+  // entities: [__dirname + '/documents/**/*.entity{.ts,.js}'],
+  entities: [Document],
+  synchronize: false, // Disable in production!
+  ssl: {
+    rejectUnauthorized: false // Required for Supabase
+  }
 });

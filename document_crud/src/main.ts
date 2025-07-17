@@ -10,7 +10,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: `http://${process.env.RAG_UI_HOST}:${process.env.RAG_UI_PORT}`,
+    origin: ["http:localhost:8080", "https://rag-ui-demo.vercel.app"],
     credentials: true,
   });
 
