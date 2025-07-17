@@ -1,8 +1,8 @@
 // API configuration for endpoints
 
 // Dynamically derive host from environment variable (uncomment for production)
-// const API_HOST = process.env.REACT_APP_API_HOST || "http://localhost:3000";
-const API_HOST = "http://localhost:3000"; // fallback for local dev
+const API_HOST = import.meta.env.VITE_API_URL || "http://localhost:3000";
+// const API_HOST = "http://localhost:3000"; // fallback for local dev
 
 export const API_ENDPOINTS = {
   QUERY: `${API_HOST}/api/query`,

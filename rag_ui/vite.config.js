@@ -4,6 +4,24 @@ import react from "@vitejs/plugin-react";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  base: "/",
+  build: {
+    outDir: "dist",
+    assetsDir: "assets",
+    cssCodeSplit: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: [
+            "react",
+            "react-dom",
+            "react-router-dom",
+            "@chakra-ui/react",
+          ],
+        },
+      },
+    },
+  },
   server: {
     port: "8080",
     host: "0.0.0.0",
