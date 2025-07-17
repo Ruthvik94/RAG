@@ -66,4 +66,6 @@ var/
 # Database files
 *.sqlite3
 
-# Docker
+.vercel/
+vercel/
+vercel.json
