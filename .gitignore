@@ -69,3 +69,4 @@ var/
 .vercel/
 vercel/
 vercel.json
+.vercelignore
