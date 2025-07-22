@@ -67,6 +67,6 @@ var/
 *.sqlite3
 
 .vercel/
-vercel/
+# vercel/
 vercel.json
 .vercelignore
