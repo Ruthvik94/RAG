@@ -11,6 +11,7 @@ $chakra-blue-800: #2a4365;
 $chakra-blue-900: #1a365d;
 $chakra-gray-200: #edf2f7;
 $chakra-gray-400: #b5b5b5;
+$chakra-gray-500: #718096;
 $chakra-gray-700: #232323;
 $chakra-gray-800: #111111;
 $chakra-gray-900: #171923;
@@ -26,7 +27,7 @@ $accent: $chakra-purple-500;
 
 $input-radius: 2.5rem;
 $input-font-size: 2rem;
-$input-padding: 1.2rem 2rem;
+$input-padding: 2.5rem 2rem;
 
 $input-box-shadow: 0 0 10px 8px $chakra-blue-400;
 $input-box-shadow-0: 0 0 16px 20px $chakra-blue-300;
@@ -75,3 +76,5 @@ $indicator-transition: border-bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 $background: $chakra-black;
 
 $spinner-thickness: 4px;
+
+$right: 2rem;

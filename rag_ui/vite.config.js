@@ -1,9 +1,20 @@
 import { defineConfig } from "vite";
+import ssrgPlugin from "vite-plugin-ssr-ssg";
 import react from "@vitejs/plugin-react";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    ssrgPlugin({
+      mode: "ssg", // Static Site Generation only
+      generate: {
+        routes: ["/", "/query", "/upload"],
+        minify: true,
+        fallback: "index.html"
+      }
+    }),
+  ],
   base: "/",
   build: {
     outDir: "dist",
@@ -28,6 +39,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
+      "@": "/src",
       "@variables": "/src/styles/_variables.scss",
       "@globals": "/src/styles/_globals.scss",
       "@apiConfig": "/src/api.config.js",

@@ -1,9 +1,17 @@
-import { Box, Heading, Text, Stack, FileUpload } from "@chakra-ui/react";
+import { useState } from "react";
+import { Box, Stack } from "@chakra-ui/react";
 import styles from "./Upload.module.scss";
 import UploadCard from "./UploadCard";
 import FileUploadCard from "./FileUploadCard";
+import ClearDocumentsCard from "./ClearDocumentsCard";
 
 const Upload = () => {
+  const [isGlobalLoading, setIsGlobalLoading] = useState(false);
+
+  const handleLoadingChange = (loading) => {
+    setIsGlobalLoading(loading);
+  };
+  ``;
   return (
     <div className={styles["upload-gradient-bg"]}>
       <Box className={styles.container}>
@@ -16,8 +24,18 @@ const Upload = () => {
           scrollbarWidth="thin"
           scrollBehavior="smooth"
         >
-          <FileUploadCard />
-          <UploadCard />
+          <FileUploadCard
+            isGlobalLoading={isGlobalLoading}
+            onLoadingChange={handleLoadingChange}
+          />
+          <UploadCard
+            isGlobalLoading={isGlobalLoading}
+            onLoadingChange={handleLoadingChange}
+          />
+          <ClearDocumentsCard
+            isGlobalLoading={isGlobalLoading}
+            onLoadingChange={handleLoadingChange}
+          />
         </Stack>
       </Box>
     </div>

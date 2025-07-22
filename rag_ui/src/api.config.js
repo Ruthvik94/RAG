@@ -7,6 +7,6 @@ const API_HOST = import.meta.env.VITE_API_URL || "http://localhost:3000";
 export const API_ENDPOINTS = {
   QUERY: `${API_HOST}/api/query`,
   INGEST: `${API_HOST}/api/ingest`,
-
-  UPLOAD: `${API_HOST}/documents/upload`,
+  LOAD_SAMPLE_DATASET: `${API_HOST}/api/load-sample-dataset`,
+  CLEAR_DOCUMENTS: `${API_HOST}/api/clear-documents`,
 };

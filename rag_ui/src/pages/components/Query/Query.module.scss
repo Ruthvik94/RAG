@@ -5,11 +5,29 @@
   max-height: $response-max-height;
   max-width: $response-max-width;
   min-width: $response-min-width;
-  width: 100%;
+  width: 70vw;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: $input-padding;
+  margin-top: 1.5rem;
+  margin-left: auto;
+  margin-right: auto;
+
+  // Responsive breakpoints to match bigSearch and responseBox
+  @media (max-width: 1200px) {
+    width: 70vw;
+  }
+
+  @media (max-width: 768px) {
+    width: 80vw;
+    min-width: 300px;
+  }
+
+  @media (max-width: 480px) {
+    width: 90vw;
+    min-width: 280px;
+  }
 }
 
 .query {
@@ -49,6 +67,40 @@
   min-width: $response-min-width;
   margin: 0 auto;
   position: relative;
+
+  // Responsive breakpoints
+  @media (max-width: 1200px) {
+    width: 70vw;
+  }
+
+  @media (max-width: 768px) {
+    width: 80vw;
+    min-width: 300px;
+  }
+
+  @media (max-width: 480px) {
+    width: 90vw;
+    min-width: 280px;
+  }
+}
+
+.searchInputGroup {
+  width: 100%;
+  position: relative;
+
+  :global(.end_element) {
+    color: $chakra-gray-500;
+    cursor: pointer;
+    right: $right;
+    z-index: 2;
+    position: absolute;
+    right: $input-padding;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: $input-font-size;
+    height: $input-font-size;
+    width: $input-font-size;
+  }
 }
 
 .glowInput {
@@ -80,7 +132,7 @@
   padding: $input-padding;
   font-size: $font-size-lg;
   margin-top: 1.5rem;
-  width: 100%;
+  width: 70vw;
   min-height: $response-min-height;
   max-height: $response-max-height;
   max-width: $response-max-width;
@@ -94,6 +146,21 @@
   background: $response-bg;
   border-radius: $response-radius;
   box-shadow: $response-box-shadow;
+
+  // Responsive breakpoints to match bigSearch
+  @media (max-width: 1200px) {
+    width: 70vw;
+  }
+
+  @media (max-width: 768px) {
+    width: 80vw;
+    min-width: 300px;
+  }
+
+  @media (max-width: 480px) {
+    width: 90vw;
+    min-width: 280px;
+  }
 }
 .responseText {
   width: 100%;
