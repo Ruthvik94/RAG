@@ -12,6 +12,10 @@ from db.database import get_db_pool, get_db_conn_with_retry
 import asyncio
 import time
 from dotenv import load_dotenv
+import redis.asyncio as redis
+import os
+import hashlib
+import json
 
 load_dotenv()
 
@@ -31,6 +35,8 @@ async def ingest(file: UploadFile = File(...)):
     print(f"📏 File headers: {dict(file.headers) if hasattr(file, 'headers') else 'No headers'}")
     
     start_time = time.time()
+
+    redis_client = redis.from_url(os.getenv("REDIS_URL"))
     
     # File size check - OPTIMIZED for demo
     MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB (restored for demo purposes)
@@ -79,14 +85,21 @@ async def ingest(file: UploadFile = File(...)):
             # Get a fresh DB connection with retry logic
             async with get_db_conn_with_retry(get_db_pool) as conn:
                 try:
-                    batch_data = [
-                        (chunk, "[" + ",".join(str(x) for x in embedding) + "]")
-                        for chunk, embedding in chunk_embedding_pairs
-                    ]
-                    await conn.executemany(
-                        "INSERT INTO documents (content, embedding) VALUES ($1, $2)",
-                        batch_data
-                    )
+                    batch_data = []
+                    for chunk, embedding in chunk_embedding_pairs:
+                        key = f"doc_chunk:{hashlib.sha256(chunk.encode()).hexdigest()}"
+                        cached = await redis_client.get(key)
+                        if cached:
+                            print(f"⏩ Skipping DB insert for cached chunk: {key}")
+                            continue
+                        batch_data.append((chunk, "[" + ",".join(str(x) for x in embedding) + "]"))
+                        await redis_client.set(key, "1", ex=604800)  # Mark as inserted, 7 days expiry
+
+                    if batch_data:
+                        await conn.executemany(
+                            "INSERT INTO documents (content, embedding) VALUES ($1, $2)",
+                            batch_data
+                        )
                     print(f"🚀 FAST batch inserted {len(batch_data)} documents")
                 except Exception as e:
                     print(f"❌ Error during batch insert: {str(e)}")
@@ -232,4 +245,30 @@ async def clear_all_documents(request: Request):
 @router.get("/cache-info/")
 async def cache_info():
     """Get cache statistics for monitoring"""
-    return get_cache_stats()
+    return await get_cache_stats()
+
+@router.delete("/clear-cache/", response_class=JSONResponse)
+async def clear_all_cache():
+    """
+    Clear all keys from Upstash Redis cache.
+    """
+    try:
+        redis_client = redis.from_url(os.getenv("REDIS_URL"))
+        keys = await redis_client.keys("*")
+        if not keys:
+            return JSONResponse(
+                status_code=204,
+                content={
+                    "status": "success",
+                    "message": "No cache keys found to delete.",
+                    "deleted_count": 0
+                }
+            )
+        deleted = await redis_client.delete(*keys)
+        return {
+            "status": "success",
+            "message": f"Successfully cleared {deleted} cache keys.",
+            "deleted_count": deleted
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to clear cache: {str(e)}")
