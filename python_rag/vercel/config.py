@@ -11,3 +11,5 @@ DB_PORT = os.getenv("DB_PORT", "6543")
 
 # AI Model Configuration
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
+ENABLE_RAW_BODY_LOGGER = os.getenv('ENABLE_RAW_BODY_LOGGER', "false");
+NODE_SERVICE_URL = os.getenv('NODE_SERVICE_URL', 'https://rag-document-crud.vercel.app/');

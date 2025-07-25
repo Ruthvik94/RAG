@@ -23,8 +23,11 @@ async function createNestApp(): Promise<INestApplication> {
       logger: isDevelopment ? ["log", "error", "warn", "debug"] : false,
     });
 
+    // Canary URL || Prod URL
+    const RAG_UI_HOST =
+      process.env.RAG_UI_HOST || "https://rag-ui-demo.vercel.app";
     app.enableCors({
-      origin: ["http://localhost:8080", "https://rag-ui-demo.vercel.app"],
+      origin: ["http://localhost:8080", RAG_UI_HOST],
       credentials: true,
     });
 

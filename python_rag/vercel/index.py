@@ -2,25 +2,12 @@
 # from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-import os
-from db.database import get_db_pool
 from api.endpoints_gemini import router as gemini_router
 from starlette.middleware.base import BaseHTTPMiddleware
 from dotenv import load_dotenv
+from config import ENABLE_RAW_BODY_LOGGER, NODE_SERVICE_URL
 
 load_dotenv()
-
-# Global database pool for serverless
-# _db_pool = None
-
-ENABLE_RAW_BODY_LOGGER = os.getenv("ENABLE_RAW_BODY_LOGGER", "false").lower() == "true"
-
-# async def get_database():
-#     """Database dependency for serverless functions"""
-#     global _db_pool
-#     if _db_pool is None:
-#         _db_pool = await get_db_pool()
-#     return _db_pool
 
 # Remove lifespan - not compatible with Vercel serverless
 app = FastAPI(
@@ -35,8 +22,7 @@ allowed_origins = [
 ]
 
 # Add Node.js service production URL if configured
-if os.getenv("NODE_SERVICE_URL"):
-    allowed_origins.append(os.getenv("NODE_SERVICE_URL"))
+allowed_origins.append(NODE_SERVICE_URL)
 
 app.add_middleware(
     CORSMiddleware,
@@ -67,19 +53,6 @@ if ENABLE_RAW_BODY_LOGGER:
     print("🪵 RawBodyLoggerMiddleware ENABLED")
 else:
     print("🪵 RawBodyLoggerMiddleware DISABLED")
-
-# Add state management for database pool
-# @app.middleware("http")
-# async def add_db_to_state(request: Request, call_next):
-#     """Add database pool to request state for compatibility with main endpoints"""
-#     if not hasattr(request.app, 'state'):
-#         request.app.state = type('State', (), {})()
-    
-#     if not hasattr(request.app.state, 'db_pool'):
-#         request.app.state.db_pool = await get_database()
-    
-#     response = await call_next(request)
-#     return response
 
 # Include RAG endpoints with /rag prefix
 app.include_router(gemini_router, prefix="/rag", tags=["gemini"])
