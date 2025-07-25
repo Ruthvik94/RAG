@@ -24,11 +24,26 @@ async function createNestApp(): Promise<INestApplication> {
     });
 
     app.enableCors({
-      origin: [
-        "http://localhost:8080",
-        "https://rag-ui-demo.vercel.app",
-        "https://rag-ui-demo-git-canary-ruthviks-projects-de6859cf.vercel.app",
-      ],
+      origin: (origin, callback) => {
+        const allowed = [
+          "http://localhost:8080",
+          "https://rag-ui-demo.vercel.app",
+          "https://rag-ui-demo-git-canary-ruthviks-projects-de6859cf.vercel.app",
+        ];
+        // Regex for any Vercel preview deployment for your UI
+        const vercelPreviewRegex = /^https:\/\/rag-ui-demo[\w-]*\.vercel\.app$/;
+        if (
+          !origin ||
+          allowed.includes(origin) ||
+          vercelPreviewRegex.test(origin)
+        ) {
+          console.log(`✅ Allowed CORS origin: ${origin}`);
+          callback(null, true);
+        } else {
+          console.log(`❌ Blocked CORS origin: ${origin}`);
+          callback(new Error("Not allowed by CORS"));
+        }
+      },
       credentials: true,
     });
 
