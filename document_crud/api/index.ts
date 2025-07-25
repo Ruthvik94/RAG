@@ -26,8 +26,17 @@ async function createNestApp(): Promise<INestApplication> {
     // Canary URL || Prod URL
     const RAG_UI_HOST =
       process.env.RAG_UI_HOST || "https://rag-ui-demo.vercel.app";
+    const allowedOrigins = ["http://localhost:8080", RAG_UI_HOST];
     app.enableCors({
-      origin: ["http://localhost:8080", RAG_UI_HOST],
+      origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+          console.log(`✅ Allowed CORS origin: ${origin}`);
+          callback(null, true);
+        } else {
+          console.log(`❌ Blocked CORS origin: ${origin}`);
+          callback(new Error("Not allowed by CORS"));
+        }
+      },
       credentials: true,
     });
 
